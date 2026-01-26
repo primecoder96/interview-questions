@@ -1,16 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Java Interview Prep</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Streams Practice | Interview Prep</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/tokyo-night-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; }
-        h1 { color: #2c3e50; }
-        .question { font-weight: bold; color: #e67e22; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1b26; color: #a9b1d6; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        h1 { color: #7aa2f7; border-bottom: 2px solid #3b4261; padding-bottom: 10px; }
+        .section { background: #24283b; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        h2 { color: #bb9af7; font-size: 1.2rem; margin-top: 0; }
+        code { font-family: 'Fira Code', monospace; }
+        .badge { background: #414868; color: #ff9e64; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>My Java Interview Questions</h1>
-    <p class="question">1. How do you sort a Map by value in Java 8?</p>
-    <p>Use <code>stream()</code>, <code>sorted()</code>, and collect into a <code>LinkedHashMap</code>.</p>
+
+<div class="container">
+    <h1>Java Stream API Practice</h1>
+    <p>A collection of common interview scenarios using the <code>Employee</code> dataset.</p>
+
+    <div class="section">
+        <h2><span class="badge">SETUP</span> Initial Data Structure</h2>
+        <p>Creating our list of employees to perform stream operations.</p>
+        <pre><code class="language-java">
+List<Employee> employees = new ArrayList<>();
+employees.add(new Employee(3345,"john","male","HR",3.45));
+employees.add(new Employee(3737,"Mark","male","Hardware",4.87));
+employees.add(new Employee(7364,"Brook","male","Developer", 1.65));
+employees.add(new Employee(222,"Micky","female","CEO",3.65));
+        </code></pre>
+    </div>
+
+    <div class="section">
+        <h2><span class="badge">Q1 & Q2</span> Gender Count (Grouping)</h2>
+        <p>How to group by a property and count occurrences, with and without specifying the Map type.</p>
+        <pre><code class="language-java">
+// Basic grouping
+Map<String, Long> genderDetails = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
+
+// Explicitly specifying HashMap type
+HashMap<String, Long> genderDetails2 = employees.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getGender, 
+        HashMap::new, 
+        Collectors.counting()
+    ));
+        </code></pre>
+    </div>
+
+    <div class="section">
+        <h2><span class="badge">Q3</span> Sorting by Rating</h2>
+        <p>Sorting objects in descending order based on a double value.</p>
+        <pre><code class="language-java">
+employees.stream()
+    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
+    .forEach(emp -> System.out.println(emp.getName() + " | " + emp.getRating()));
+        </code></pre>
+    </div>
+
+    <div class="section">
+        <h2><span class="badge">Q4</span> Storing Sorted Results in a Map</h2>
+        <p>Using <code>LinkedHashMap</code> to preserve the sorted order after collection.</p>
+        <pre><code class="language-java">
+LinkedHashMap<String, Double> empRating = employees.stream()
+    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
+    .collect(Collectors.toMap(
+        Employee::getName, 
+        Employee::getRating, 
+        (oldV, newV) -> oldV, 
+        LinkedHashMap::new
+    ));
+        </code></pre>
+    </div>
+
+    <div class="section" style="border-left: 4px solid #f7768e;">
+        <h2><span class="badge">Q5</span> Bonus: Department-wise Gender Count</h2>
+        <p>Nesting collectors to get deep insights.</p>
+        <pre><code class="language-java">
+Map<String, Map<String, Long>> deptGenderCount = employees.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment, 
+        Collectors.groupingBy(Employee::getGender, Collectors.counting())
+    ));
+        </code></pre>
+    </div>
+</div>
+
 </body>
 </html>
