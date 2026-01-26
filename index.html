@@ -3,91 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Java Streams Practice | Interview Prep</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/tokyo-night-dark.min.css">
+    <title>Java Streams Study Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1b26; color: #a9b1d6; line-height: 1.6; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; }
-        h1 { color: #7aa2f7; border-bottom: 2px solid #3b4261; padding-bottom: 10px; }
-        .section { background: #24283b; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        h2 { color: #bb9af7; font-size: 1.2rem; margin-top: 0; }
-        code { font-family: 'Fira Code', monospace; }
-        .badge { background: #414868; color: #ff9e64; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        :root {
+            --primary-blue: #0969da;
+            --bg-color: #ffffff;
+            --section-bg: #f6f8fa;
+            --text-main: #1f2328;
+            --text-muted: #656d76;
+            --border-color: #d0d7de;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            line-height: 1.6; 
+            margin: 0; 
+            padding: 40px 20px; 
+        }
+
+        .container { max-width: 850px; margin: auto; }
+
+        .header { border-bottom: 1px solid var(--border-color); margin-bottom: 40px; padding-bottom: 20px; }
+        h1 { font-size: 2rem; color: var(--text-main); margin-bottom: 8px; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+
+        .study-card { 
+            background: var(--bg-color); 
+            border: 1px solid var(--border-color); 
+            border-radius: 6px; 
+            margin-bottom: 24px; 
+            overflow: hidden;
+        }
+
+        .card-header { 
+            background-color: var(--section-bg); 
+            padding: 12px 20px; 
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h2 { font-size: 1rem; margin: 0; color: var(--primary-blue); }
+        .q-tag { font-size: 0.75rem; background: #ddf4ff; color: #0969da; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+
+        .card-content { padding: 20px; }
+        .explanation { font-size: 0.95rem; color: var(--text-main); margin-bottom: 15px; }
+
+        pre { margin: 0; border-radius: 6px; border: 1px solid #ebedef; }
+        code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important; font-size: 13px !important; }
+
+        .footer { text-align: center; margin-top: 50px; color: var(--text-muted); font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Java Stream API Practice</h1>
-    <p>A collection of common interview scenarios using the <code>Employee</code> dataset.</p>
-
-    <div class="section">
-        <h2><span class="badge">SETUP</span> Initial Data Structure</h2>
-        <p>Creating our list of employees to perform stream operations.</p>
-        <pre><code class="language-java">
-List<Employee> employees = new ArrayList<>();
-employees.add(new Employee(3345,"john","male","HR",3.45));
-employees.add(new Employee(3737,"Mark","male","Hardware",4.87));
-employees.add(new Employee(7364,"Brook","male","Developer", 1.65));
-employees.add(new Employee(222,"Micky","female","CEO",3.65));
-        </code></pre>
+    <div class="header">
+        <h1>Java Stream API: Practical Exercises</h1>
+        <p class="subtitle">A structured guide to mastering Collectors, Grouping, and Sorting.</p>
     </div>
 
-    <div class="section">
-        <h2><span class="badge">Q1 & Q2</span> Gender Count (Grouping)</h2>
-        <p>How to group by a property and count occurrences, with and without specifying the Map type.</p>
-        <pre><code class="language-java">
-// Basic grouping
-Map<String, Long> genderDetails = employees.stream()
-    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
-
-// Explicitly specifying HashMap type
-HashMap<String, Long> genderDetails2 = employees.stream()
+    <div class="study-card">
+        <div class="card-header">
+            <h2>Basic Gender Grouping</h2>
+            <span class="q-tag">Question 01</span>
+        </div>
+        <div class="card-content">
+            <p class="explanation">Given an employee collection, find the gender count using a standard <code>groupingBy</code> collector.</p>
+            <pre><code class="language-java">
+Map&lt;String, Long&gt; genderDetails = employees.stream()
     .collect(Collectors.groupingBy(
         Employee::getGender, 
-        HashMap::new, 
         Collectors.counting()
     ));
-        </code></pre>
+
+genderDetails.forEach((k, v) -> System.out.println(k + " : " + v));
+            </code></pre>
+        </div>
     </div>
 
-    <div class="section">
-        <h2><span class="badge">Q3</span> Sorting by Rating</h2>
-        <p>Sorting objects in descending order based on a double value.</p>
-        <pre><code class="language-java">
-employees.stream()
-    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
-    .forEach(emp -> System.out.println(emp.getName() + " | " + emp.getRating()));
-        </code></pre>
+    <div class="study-card">
+        <div class="card-header">
+            <h2>Explicit Map Implementation</h2>
+            <span class="q-tag">Question 02</span>
+        </div>
+        <div class="card-content">
+            <p class="explanation">Specify a <code>HashMap</code> as the target collection type during the grouping process.</p>
+            <pre><code class="language-java">
+HashMap&lt;String, Long&gt; genderDetails = employees.stream()
+    .collect(Collectors.groupingBy(
+        emp -> emp.getGender(),
+        HashMap::new,
+        Collectors.counting()
+    ));
+            </code></pre>
+        </div>
     </div>
 
-    <div class="section">
-        <h2><span class="badge">Q4</span> Storing Sorted Results in a Map</h2>
-        <p>Using <code>LinkedHashMap</code> to preserve the sorted order after collection.</p>
-        <pre><code class="language-java">
-LinkedHashMap<String, Double> empRating = employees.stream()
+    <div class="study-card">
+        <div class="card-header">
+            <h2>Sorting & LinkedHashMap</h2>
+            <span class="q-tag">Question 03 & 04</span>
+        </div>
+        <div class="card-content">
+            <p class="explanation">Sort employees by rating (descending) and capture the result in a <code>LinkedHashMap</code> to preserve order.</p>
+            <pre><code class="language-java">
+LinkedHashMap&lt;String, Double&gt; empRating = employees.stream()
     .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
     .collect(Collectors.toMap(
         Employee::getName, 
         Employee::getRating, 
-        (oldV, newV) -> oldV, 
+        (oldValue, newValue) -> oldValue, 
         LinkedHashMap::new
     ));
-        </code></pre>
+            </code></pre>
+        </div>
     </div>
 
-    <div class="section" style="border-left: 4px solid #f7768e;">
-        <h2><span class="badge">Q5</span> Bonus: Department-wise Gender Count</h2>
-        <p>Nesting collectors to get deep insights.</p>
-        <pre><code class="language-java">
-Map<String, Map<String, Long>> deptGenderCount = employees.stream()
-    .collect(Collectors.groupingBy(
-        Employee::getDepartment, 
-        Collectors.groupingBy(Employee::getGender, Collectors.counting())
-    ));
-        </code></pre>
+    <div class="footer">
+        Practice Guide &bull; Created for Interview Prep &bull; 2026
     </div>
 </div>
 
