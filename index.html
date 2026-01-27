@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrepPortal | Java & DSA</title>
+    <title>PrepPortal | Java, DSA & Design Patterns</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -11,6 +11,7 @@
         :root {
             --primary: #0969da;
             --dsa-color: #cf222e;
+            --dp-color: #1a7f37; /* New theme for Design Patterns */
             --bg: #ffffff;
             --secondary-bg: #f6f8fa;
             --text: #1f2328;
@@ -27,12 +28,14 @@
         .container { max-width: 1100px; margin: auto; padding: 20px; }
         
         .hero { text-align: center; padding: 40px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
         .cat-card { border: 1px solid var(--border); padding: 25px; border-radius: 12px; text-decoration: none; color: var(--text); transition: 0.2s; background: white; }
         .cat-card:hover { border-color: var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.08); transform: translateY(-2px); }
         .cat-card h3 { margin: 0 0 10px; color: var(--primary); }
         .cat-card.dsa-card:hover { border-color: var(--dsa-color); }
         .cat-card.dsa-card h3 { color: var(--dsa-color); }
+        .cat-card.dp-card:hover { border-color: var(--dp-color); }
+        .cat-card.dp-card h3 { color: var(--dp-color); }
 
         /* Sidebar Layout */
         .portal-layout { display: flex; gap: 30px; margin-top: 20px; align-items: flex-start; }
@@ -43,10 +46,10 @@
         
         .java-nav.active { background: #ddf4ff; color: var(--primary); font-weight: 600; }
         .dsa-nav.active { background: #ffebe9; color: var(--dsa-color); font-weight: 600; }
+        .dp-nav.active { background: #dafbe1; color: var(--dp-color); font-weight: 600; }
 
         .main-content { flex: 1; min-width: 0; }
         .content-section { display: none; }
-        .content-section:target { display: block; }
         
         .topic-pane { display: none; }
         .topic-pane.active { display: block; animation: fadeIn 0.3s ease; }
@@ -65,11 +68,12 @@
         .q-tag { font-size: 0.7rem; padding: 2px 10px; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
         .tag-java { background: #ddf4ff; color: var(--primary); }
         .tag-dsa { background: #ffebe9; color: var(--dsa-color); }
+        .tag-dp { background: #dafbe1; color: var(--dp-color); }
         
         .data-setup { background: #fff8c5; border: 1px solid #d4a72c; padding: 15px; border-radius: 6px; margin-bottom: 25px; }
         .complexity-box { background: #f6f8fa; padding: 10px 15px; border-radius: 6px; border-left: 4px solid var(--dsa-color); margin-top: 15px; font-size: 0.9rem; }
 
-        @media (max-width: 850px) { .portal-layout { flex-direction: column; } .sidebar { position: static; width: 100%; } }
+        @media (max-width: 850px) { .category-grid { grid-template-columns: 1fr; } .portal-layout { flex-direction: column; } .sidebar { position: static; width: 100%; } }
     </style>
 </head>
 <body>
@@ -79,13 +83,14 @@
         <a href="#" class="nav-link">Home</a>
         <a href="#dsa" class="nav-link">DSA</a>
         <a href="#corejava" class="nav-link">Core Java</a>
+        <a href="#designpatterns" class="nav-link">Design Patterns</a>
     </div>
 </nav>
 
 <div class="container">
     <div id="hero-area" class="hero">
         <h1>Engineering Prep Dashboard</h1>
-        <p>A structured repository for DSA and Core Java Interview questions.</p>
+        <p>A structured repository for DSA, Core Java, and Design Patterns.</p>
         <div class="category-grid">
             <a href="#dsa" class="cat-card dsa-card">
                 <h3>DSA</h3>
@@ -94,6 +99,10 @@
             <a href="#corejava" class="cat-card">
                 <h3>Core Java</h3>
                 <p>Stream API and Functional Programming.</p>
+            </a>
+            <a href="#designpatterns" class="cat-card dp-card">
+                <h3>Design Patterns</h3>
+                <p>Adapter, Factory, and Structural Patterns.</p>
             </a>
         </div>
     </div>
@@ -110,7 +119,6 @@
             <main class="main-content">
                 <div id="trees" class="topic-pane dsa-pane active">
                     <h2 style="color: var(--dsa-color); border-bottom: 2px solid var(--dsa-color); padding-bottom: 10px;">Module: Tree Data Structures</h2>
-                    
                     <div class="data-setup">
                         <strong>Tree Node Structure:</strong>
                         <pre><code class="language-java">class Node {
@@ -124,40 +132,22 @@
     }
 }</code></pre>
                     </div>
-
                     <div class="study-card">
-                        <div class="card-header">
-                            <h2>In-Order Traversal (Recursive)</h2>
-                            <span class="q-tag tag-dsa">DFS Traversal</span>
-                        </div>
+                        <div class="card-header"><h2>In-Order Traversal (Recursive)</h2><span class="q-tag tag-dsa">DFS Traversal</span></div>
                         <div class="card-content">
                             <p class="explanation">Logic: Left -> Root -> Right.</p>
-                            
                             <pre><code class="language-java">public class BinaryTree {
     Node root;	
     public BinaryTree() { this.root = null; }	
-    
     public void printInOrder() { printInOrderRecursive(root); }
-    
     private void printInOrderRecursive(Node node) {
         if (node == null) return;
-        
         printInOrderRecursive(node.left);
         System.out.println(node.data);
         printInOrderRecursive(node.right);
     }
-
-    public static void main(String[] args) {
-        BinaryTree tree = new BinaryTree();
-        tree.root = new Node(1);
-        tree.root.left = new Node(2);
-        tree.root.right = new Node(3);
-        tree.printInOrder();
-    }
 }</code></pre>
-                            <div class="complexity-box">
-                                <strong>Complexity:</strong> Time: $O(n)$ | Space: $O(h)$
-                            </div>
+                            <div class="complexity-box"><strong>Complexity:</strong> Time: $O(n)$ | Space: $O(h)$</div>
                         </div>
                     </div>
                 </div>
@@ -178,7 +168,6 @@
             <main class="main-content">
                 <div id="streams" class="topic-pane java-pane active">
                     <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Module: Stream API Practice</h2>
-
                     <div class="data-setup">
                         <strong>Source Dataset:</strong>
                         <pre><code class="language-java">List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
@@ -187,7 +176,6 @@ employees.add(new Employee(3737,"Mark","male","Hardware",4.87));
 employees.add(new Employee(7364,"Brook","male","Developer", 1.65));
 employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
                     </div>
-
                     <div class="study-card">
                         <div class="card-header"><h2>Q1: Gender Count (Basic)</h2><span class="q-tag tag-java">Grouping</span></div>
                         <div class="card-content">
@@ -196,7 +184,6 @@ employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
 genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));</code></pre>
                         </div>
                     </div>
-
                     <div class="study-card">
                         <div class="card-header"><h2>Q2: Gender Count (Specific Map Type)</h2><span class="q-tag tag-java">Collectors</span></div>
                         <div class="card-content">
@@ -204,7 +191,6 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
     .collect(Collectors.groupingBy(emp -> emp.getGender(), HashMap::new, Collectors.counting()));</code></pre>
                         </div>
                     </div>
-
                     <div class="study-card">
                         <div class="card-header"><h2>Q3: Sort by Rating (Descending)</h2><span class="q-tag tag-java">Sorting</span></div>
                         <div class="card-content">
@@ -213,7 +199,6 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
     .forEach(emp -> System.out.println(emp.getName()+"|"+emp.getRating()));</code></pre>
                         </div>
                     </div>
-
                     <div class="study-card">
                         <div class="card-header"><h2>Q4: Sort and Capture in Map</h2><span class="q-tag tag-java">LinkedHashMap</span></div>
                         <div class="card-content">
@@ -222,7 +207,6 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
     .collect(Collectors.toMap(emp -> emp.getName(), emp -> emp.getRating(), (a,b) -> a, LinkedHashMap::new));</code></pre>
                         </div>
                     </div>
-
                     <div class="study-card">
                         <div class="card-header"><h2>Q5: Department-wise Gender Count</h2><span class="q-tag tag-java">Multi-Level Grouping</span></div>
                         <div class="card-content">
@@ -232,6 +216,61 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                     </div>
                 </div>
                 <div id="collections" class="topic-pane java-pane"><h2>Collections Framework</h2><p>Practice coming soon...</p></div>
+            </main>
+        </div>
+    </div>
+
+    <div id="designpatterns" class="content-section">
+        <div class="portal-layout">
+            <aside class="sidebar">
+                <h4>Pattern Topics</h4>
+                <ul>
+                    <li><a href="javascript:void(0)" class="dp-nav active" onclick="switchTopic('dp', 'adapter', this)">Adapter Pattern</a></li>
+                    <li><a href="javascript:void(0)" class="dp-nav" onclick="switchTopic('dp', 'factory', this)">Factory Pattern</a></li>
+                </ul>
+            </aside>
+            <main class="main-content">
+                <div id="adapter" class="topic-pane dp-pane active">
+                    <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Adapter Pattern</h2>
+                    <p class="explanation">Converts the interface of a class into another interface clients expect. Perfect for making legacy code work with modern systems.</p>
+
+                    
+
+                    <div class="study-card">
+                        <div class="card-header"><h2>Payment System Integration</h2><span class="q-tag tag-dp">Adapter</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">public interface PaymentProcessor {
+    void processPayments(String customerName, double amount);
+}
+
+class LegacyBankAPI {
+    public void performWireTransfer(String bankCode, String accountName, String value) {
+        System.out.println("Legacy Bank transferring " + value + " for " + accountName);
+    }
+}
+
+public class BankAdapter implements PaymentProcessor {
+    private LegacyBankAPI legacyBankAPI;
+    public BankAdapter(LegacyBankAPI legacyBankAPI) { this.legacyBankAPI = legacyBankAPI; }
+
+    @Override
+    public void processPayments(String name, double amount) {
+        String value = String.valueOf(amount);
+        legacyBankAPI.performWireTransfer("CODE_99", name, value);
+    }
+}
+
+public class PaymentService {
+    public static void main(String[] args) {
+        LegacyBankAPI old = new LegacyBankAPI();
+        PaymentProcessor payment = new BankAdapter(old);
+        payment.processPayments("John", 450.00);
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div id="factory" class="topic-pane dp-pane"><h2>Factory Pattern</h2><p>Coming soon...</p></div>
             </main>
         </div>
     </div>
@@ -247,8 +286,18 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
     }
 
     function handleRouting() {
+        const hash = window.location.hash;
         const hero = document.getElementById('hero-area');
-        hero.style.display = (window.location.hash === '#dsa' || window.location.hash === '#corejava') ? 'none' : 'block';
+        const sections = ['#dsa', '#corejava', '#designpatterns'];
+        
+        // Toggle Hero Visibility
+        hero.style.display = sections.includes(hash) ? 'none' : 'block';
+
+        // Toggle Content Sections Visibility
+        sections.forEach(s => {
+            const sectionEl = document.querySelector(s);
+            if(sectionEl) sectionEl.style.display = (hash === s) ? 'block' : 'none';
+        });
     }
 
     window.addEventListener('hashchange', handleRouting);
