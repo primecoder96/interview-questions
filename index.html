@@ -10,6 +10,7 @@
     <style>
         :root {
             --primary: #0969da;
+            --dsa-color: #cf222e;
             --bg: #ffffff;
             --secondary-bg: #f6f8fa;
             --text: #1f2328;
@@ -30,6 +31,8 @@
         .cat-card { border: 1px solid var(--border); padding: 25px; border-radius: 12px; text-decoration: none; color: var(--text); transition: 0.2s; background: white; }
         .cat-card:hover { border-color: var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.08); transform: translateY(-2px); }
         .cat-card h3 { margin: 0 0 10px; color: var(--primary); }
+        .cat-card.dsa-hover:hover { border-color: var(--dsa-color); }
+        .cat-card.dsa-hover h3 { color: var(--dsa-color); }
 
         .content-section { display: none; margin-top: 40px; }
         .content-section:target { display: block; }
@@ -43,8 +46,10 @@
         code { font-family: "SFMono-Regular", Consolas, monospace !important; font-size: 13px !important; }
         .explanation { margin-bottom: 15px; font-size: 0.95rem; color: #444; }
         .q-tag { font-size: 0.7rem; background: #ddf4ff; color: var(--primary); padding: 2px 10px; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
+        .q-tag.dsa-tag { background: #ffebe9; color: var(--dsa-color); }
         
         .data-setup { background: #fff8c5; border: 1px solid #d4a72c; padding: 15px; border-radius: 6px; margin-bottom: 30px; }
+        .complexity-box { background: #f6f8fa; padding: 10px 15px; border-radius: 6px; border-left: 4px solid var(--dsa-color); margin-top: 15px; font-size: 0.9rem; }
     </style>
     <meta name="google-site-verification" content="z7U_t82vOGI06RmVdckdhKu8w9YieqKMoGB7x-bjcV0" />
 </head>
@@ -64,7 +69,7 @@
         <p>A structured repository for DSA and Core Java Interview questions.</p>
         
         <div class="category-grid">
-            <a href="#dsa" class="cat-card">
+            <a href="#dsa" class="cat-card dsa-hover">
                 <h3>DSA</h3>
                 <p>Logic, Algorithms, and Complexity Analysis.</p>
             </a>
@@ -76,8 +81,54 @@
     </div>
 
     <div id="dsa" class="content-section">
-        <h2 style="color: #cf222e;">Data Structures & Algorithms</h2>
-        <p>Work in progress. Content will be added soon.</p>
+        <h2 style="color: var(--dsa-color); border-bottom: 2px solid var(--dsa-color); padding-bottom: 10px;">Module: Tree Data Structures</h2>
+        
+        <div class="data-setup">
+            <strong>Base Structure: Binary Tree Node</strong>
+            <pre><code class="language-java">
+class Node {
+    int data;
+    Node left, right;
+    
+    public Node(int data) {
+        this.data = data;
+        this.left = this.right = null;
+    }
+}</code></pre>
+        </div>
+
+        <div class="study-card">
+            <div class="card-header">
+                <h2>Q1: In-Order Traversal (Recursive)</h2>
+                <span class="q-tag dsa-tag">Trees</span>
+            </div>
+            <div class="card-content">
+                <p class="explanation">In-order traversal visits nodes in the order: <b>Left -> Root -> Right</b>. This is particularly useful for BSTs as it retrieves data in sorted order.</p>
+                
+                
+                
+                <pre><code class="language-java">
+public void printInOrderRecursive(Node node) {
+    if (node == null) return;
+
+    // Step 1: Recur on the left child
+    printInOrderRecursive(node.left);
+
+    // Step 2: Visit the root node
+    System.out.print(node.data + " ");
+
+    // Step 3: Recur on the right child
+    printInOrderRecursive(node.right);
+}
+                </code></pre>
+
+                <div class="complexity-box">
+                    <strong>Complexity Analysis:</strong><br>
+                    • Time Complexity: $O(n)$ because we visit every node exactly once.<br>
+                    • Space Complexity: $O(h)$ where $h$ is the tree height (due to recursion stack).
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="corejava" class="content-section">
@@ -185,4 +236,3 @@ Map&lt;String, Map&lt;String, Long&gt;&gt; deptGenderCount = employees.stream()
 
 </body>
 </html>
-
