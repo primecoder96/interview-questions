@@ -156,11 +156,13 @@
                         <div class="card-header"><h2>Level Order Traversal (Iterative)</h2><span class="q-tag tag-dsa">BFS Traversal</span></div>
                         <div class="card-content">
                             <p class="explanation">Logic: Visits nodes level-by-level using a Queue (FIFO).</p>
-
-                            <pre><code class="language-java">private List&lt;Integer&gt; levelOrderTraversal(Node root) {	
+                            
+                            <pre><code class="language-java">private List&lt;Integer&gt; levelOrderTraversal(Node root) {
     List&lt;Integer&gt; levelOrder = new ArrayList&lt;&gt;();
     
-    if (root == null) return levelOrder;		
+    if (root == null) {
+        return levelOrder;
+    }
     
     Queue&lt;Node&gt; queue = new LinkedList&lt;&gt;();
     queue.add(root);
@@ -178,7 +180,7 @@
         }
     }
     
-    return levelOrder;		
+    return levelOrder;
 }</code></pre>
                             <div class="complexity-box"><strong>Complexity:</strong> Time: $O(n)$ | Space: $O(w)$ (Max Width)</div>
                         </div>
@@ -323,7 +325,7 @@ public class SMSNotifier implements Notifier {
 
 // Abstract Decorator
 public abstract class NotifierDecorator implements Notifier {
-    protected Notifier notifier; // Protected for subclass access
+    protected Notifier notifier; 
     
     public NotifierDecorator(Notifier notifier) {
         this.notifier = notifier;
@@ -350,7 +352,6 @@ public class EmailDecorator extends NotifierDecorator {
 // Client Code
 public class Demo {
     public static void main(String[] args) {
-        // Wrap SMS inside Email
         Notifier sms = new EmailDecorator(new SMSNotifier());
         sms.send("test message");
     }
