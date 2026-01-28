@@ -132,6 +132,7 @@
     }
 }</code></pre>
                     </div>
+                    
                     <div class="study-card">
                         <div class="card-header"><h2>In-Order Traversal (Recursive)</h2><span class="q-tag tag-dsa">DFS Traversal</span></div>
                         <div class="card-content">
@@ -150,6 +151,39 @@
                             <div class="complexity-box"><strong>Complexity:</strong> Time: $O(n)$ | Space: $O(h)$</div>
                         </div>
                     </div>
+
+                    <div class="study-card">
+                        <div class="card-header"><h2>Level Order Traversal (Iterative)</h2><span class="q-tag tag-dsa">BFS Traversal</span></div>
+                        <div class="card-content">
+                            <p class="explanation">Logic: Visits nodes level-by-level using a Queue (FIFO).</p>
+
+                            <pre><code class="language-java">private List&lt;Integer&gt; levelOrderTraversal(Node root) {	
+    List&lt;Integer&gt; levelOrder = new ArrayList&lt;&gt;();
+    
+    if (root == null) return levelOrder;		
+    
+    Queue&lt;Node&gt; queue = new LinkedList&lt;&gt;();
+    queue.add(root);
+    
+    while (!queue.isEmpty()) {
+        final Node current = queue.poll();
+        levelOrder.add(current.data);
+        
+        if (current.left != null) {
+            queue.add(current.left);
+        }
+        
+        if (current.right != null) {
+            queue.add(current.right);
+        }
+    }
+    
+    return levelOrder;		
+}</code></pre>
+                            <div class="complexity-box"><strong>Complexity:</strong> Time: $O(n)$ | Space: $O(w)$ (Max Width)</div>
+                        </div>
+                    </div>
+
                 </div>
                 <div id="bst" class="topic-pane dsa-pane"><h2>Binary Search Tree</h2><p>Coming soon...</p></div>
             </main>
