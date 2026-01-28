@@ -11,7 +11,7 @@
         :root {
             --primary: #0969da;
             --dsa-color: #cf222e;
-            --dp-color: #1a7f37; /* New theme for Design Patterns */
+            --dp-color: #1a7f37;
             --bg: #ffffff;
             --secondary-bg: #f6f8fa;
             --text: #1f2328;
@@ -226,6 +226,7 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                 <h4>Pattern Topics</h4>
                 <ul>
                     <li><a href="javascript:void(0)" class="dp-nav active" onclick="switchTopic('dp', 'adapter', this)">Adapter Pattern</a></li>
+                    <li><a href="javascript:void(0)" class="dp-nav" onclick="switchTopic('dp', 'decorator', this)">Decorator Pattern</a></li>
                     <li><a href="javascript:void(0)" class="dp-nav" onclick="switchTopic('dp', 'factory', this)">Factory Pattern</a></li>
                 </ul>
             </aside>
@@ -233,9 +234,6 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                 <div id="adapter" class="topic-pane dp-pane active">
                     <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Adapter Pattern</h2>
                     <p class="explanation">Converts the interface of a class into another interface clients expect. Perfect for making legacy code work with modern systems.</p>
-
-                    
-
                     <div class="study-card">
                         <div class="card-header"><h2>Payment System Integration</h2><span class="q-tag tag-dp">Adapter</span></div>
                         <div class="card-content">
@@ -270,6 +268,63 @@ public class PaymentService {
                         </div>
                     </div>
                 </div>
+
+                <div id="decorator" class="topic-pane dp-pane">
+                    <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Decorator Pattern</h2>
+                    <p class="explanation">Allows behavior to be added to an individual object, dynamically, without affecting the behavior of other objects from the same class.</p>
+                    
+                    <div class="study-card">
+                        <div class="card-header"><h2>Dynamic Notification System</h2><span class="q-tag tag-dp">Decorator</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">public interface Notifier {
+    public void send(String message);
+}
+
+// Concrete Component
+public class SMSNotifier implements Notifier {
+    public void send(String message) {
+        System.out.println("Type: SMS | message: " + message);
+    }
+}
+
+// Abstract Decorator
+public abstract class NotifierDecorator implements Notifier {
+    protected Notifier notifier; // Protected for subclass access
+    
+    public NotifierDecorator(Notifier notifier) {
+        this.notifier = notifier;
+    }
+
+    public void send(String message) {
+        notifier.send(message);
+    }
+}
+
+// Concrete Decorator
+public class EmailDecorator extends NotifierDecorator {
+    public EmailDecorator(Notifier notifier) {
+        super(notifier);		
+    }
+
+    @Override
+    public void send(String message) {
+        super.send(message);
+        System.out.println("Type: EMAIL | message: " + message);
+    }
+}
+
+// Client Code
+public class Demo {
+    public static void main(String[] args) {
+        // Wrap SMS inside Email
+        Notifier sms = new EmailDecorator(new SMSNotifier());
+        sms.send("test message");
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="factory" class="topic-pane dp-pane"><h2>Factory Pattern</h2><p>Coming soon...</p></div>
             </main>
         </div>
@@ -290,10 +345,8 @@ public class PaymentService {
         const hero = document.getElementById('hero-area');
         const sections = ['#dsa', '#corejava', '#designpatterns'];
         
-        // Toggle Hero Visibility
         hero.style.display = sections.includes(hash) ? 'none' : 'block';
 
-        // Toggle Content Sections Visibility
         sections.forEach(s => {
             const sectionEl = document.querySelector(s);
             if(sectionEl) sectionEl.style.display = (hash === s) ? 'block' : 'none';
