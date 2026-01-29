@@ -98,7 +98,7 @@
             </a>
             <a href="#corejava" class="cat-card">
                 <h3>Core Java</h3>
-                <p>Stream API and Multithreading.</p>
+                <p>Stream API, Multithreading & Volatile.</p>
             </a>
             <a href="#designpatterns" class="cat-card dp-card">
                 <h3>Design Patterns</h3>
@@ -175,7 +175,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="bst" class="topic-pane dsa-pane"><h2>Binary Search Tree</h2><p>Coming soon...</p></div>
+                <div id="bst" class="topic-pane dsa-pane"><h2>Binary Search Tree</h2><p>Binary Search Tree content coming soon...</p></div>
             </main>
         </div>
     </div>
@@ -202,24 +202,48 @@ employees.add(new Employee(7364,"Brook","male","Developer", 1.65));
 employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
                     </div>
                     <div class="study-card">
-                        <div class="card-header"><h2>Q1: Gender Count</h2><span class="q-tag tag-java">Grouping</span></div>
+                        <div class="card-header"><h2>Q1: Gender Count (Basic)</h2><span class="q-tag tag-java">Grouping</span></div>
                         <div class="card-content">
-                            <pre><code class="language-java">Map&lt;String, Long&gt; genderDetails = employees.stream()
-    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));</code></pre>
+                            <pre><code class="language-java">Map&lt;String, Long&gt; genderDetails2 = employees.stream()
+    .collect(Collectors.groupingBy(emp -> emp.getGender(), Collectors.counting()));
+genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));</code></pre>
+                        </div>
+                    </div>
+                    <div class="study-card">
+                        <div class="card-header"><h2>Q2: Gender Count (Specific Map Type)</h2><span class="q-tag tag-java">Collectors</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">HashMap&lt;String,Long&gt; genderDetails = employees.stream()
+    .collect(Collectors.groupingBy(emp -> emp.getGender(), HashMap::new, Collectors.counting()));</code></pre>
+                        </div>
+                    </div>
+                    <div class="study-card">
+                        <div class="card-header"><h2>Q3: Sort by Rating (Descending)</h2><span class="q-tag tag-java">Sorting</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">employees.stream()
+    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
+    .forEach(emp -> System.out.println(emp.getName()+"|"+emp.getRating()));</code></pre>
+                        </div>
+                    </div>
+                    <div class="study-card">
+                        <div class="card-header"><h2>Q4: Sort and Capture in Map</h2><span class="q-tag tag-java">LinkedHashMap</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">LinkedHashMap&lt;String,Double&gt; empRating = employees.stream()
+    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
+    .collect(Collectors.toMap(emp -> emp.getName(), emp -> emp.getRating(), (a,b) -> a, LinkedHashMap::new));</code></pre>
                         </div>
                     </div>
                 </div>
 
                 <div id="volatile" class="topic-pane java-pane">
-                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Multithreading: Volatile Keyword</h2>
-                    <p class="explanation">Volatile ensures <strong>visibility</strong> of changes across threads by forcing reads and writes directly to Main Memory (RAM) instead of CPU caches.</p>
+                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Module: Multithreading & Volatile</h2>
+                    <p class="explanation">The <code>volatile</code> keyword ensures that a variable is always read from and written to Main Memory, bypassing CPU caches.</p>
                     
                     
 
                     <div class="study-card">
-                        <div class="card-header"><h2>Volatile Shutdown Pattern</h2><span class="q-tag tag-java">Thread Signaling</span></div>
+                        <div class="card-header"><h2>Volatile Shutdown Example</h2><span class="q-tag tag-java">Signaling</span></div>
                         <div class="card-content">
-                            <p class="explanation">One thread monitors the 'active' flag while the main thread signals a stop.</p>
+                            <p class="explanation">Practice using a flag to stop a thread safely.</p>
                             <pre><code class="language-java">public class VolatileShutdown {
     private static volatile boolean active = true;
 
@@ -228,36 +252,33 @@ employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
             long count = 0;
             System.out.println("Worker: Starting loop...");
             while(active) {
-                // Without volatile, the thread might cache 'active=true' forever
+                // Keep work minimal to observe caching behavior
                 count++;
             }
-            System.out.println("Worker: Stopped at count: " + count);
+            System.out.println("Worker: Stopped. Final count: " + count);
         });
 
         t1.start();
         Thread.sleep(100);
-        System.out.println("Main: Signaling shutdown...");
-        active = false; 
+        active = false; // Visibility guaranteed by volatile
         t1.join();
-        System.out.println("Main: Program exit");
+        System.out.println("Main program exit");
     }
 }</code></pre>
                         </div>
                     </div>
 
                     <div class="study-card">
-                        <div class="card-header"><h2>Volatile Status Observer</h2><span class="q-tag tag-java">Visibility</span></div>
+                        <div class="card-header"><h2>Volatile Status Practice</h2><span class="q-tag tag-java">Visibility</span></div>
                         <div class="card-content">
-                            <p class="explanation">Thread 1 spins until Thread 2 updates the status string in memory.</p>
+                            <p class="explanation">Thread 1 reacts to changes made by Thread 2 immediately.</p>
                             <pre><code class="language-java">public class VolatileStatus {
     private static volatile String status = "INITIALIZE";
 
     public static void main(String[] args) {
         Thread t1 = new Thread(() -> {
             System.out.println("Worker 1: Waiting for FINISH...");
-            while (!status.equals("FINISH")) {
-                // Read directly from RAM due to volatile
-            }
+            while (!status.equals("FINISH")) { }
             System.out.println("Worker 1: Detected FINISH! Execution completed.");
         });
 
@@ -267,7 +288,6 @@ employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
                 status = "PROCESSING";
                 Thread.sleep(1000);
                 status = "FINISH";
-                System.out.println("Worker 2: Status set to FINISH");
             } catch (InterruptedException e) { e.printStackTrace(); }
         });
 
@@ -279,7 +299,7 @@ employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
                     </div>
                 </div>
 
-                <div id="collections" class="topic-pane java-pane"><h2>Collections Framework</h2><p>Practice coming soon...</p></div>
+                <div id="collections" class="topic-pane java-pane"><h2>Collections Framework</h2><p>Collections content coming soon...</p></div>
             </main>
         </div>
     </div>
@@ -297,15 +317,62 @@ employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
             <main class="main-content">
                 <div id="adapter" class="topic-pane dp-pane active">
                     <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Adapter Pattern</h2>
+                    <p class="explanation">Converts the interface of a class into another interface clients expect.</p>
                     <div class="study-card">
                         <div class="card-header"><h2>Payment System Integration</h2><span class="q-tag tag-dp">Adapter</span></div>
                         <div class="card-content">
-                            <pre><code class="language-java">// Code for Adapter Pattern...</code></pre>
+                            <pre><code class="language-java">public interface PaymentProcessor {
+    void processPayments(String customerName, double amount);
+}
+
+class LegacyBankAPI {
+    public void performWireTransfer(String bankCode, String accountName, String value) {
+        System.out.println("Legacy Bank transferring " + value + " for " + accountName);
+    }
+}
+
+public class BankAdapter implements PaymentProcessor {
+    private LegacyBankAPI legacyBankAPI;
+    public BankAdapter(LegacyBankAPI legacyBankAPI) { this.legacyBankAPI = legacyBankAPI; }
+
+    @Override
+    public void processPayments(String name, double amount) {
+        legacyBankAPI.performWireTransfer("CODE_99", name, String.valueOf(amount));
+    }
+}</code></pre>
                         </div>
                     </div>
                 </div>
-                <div id="decorator" class="topic-pane dp-pane"><h2>Decorator Pattern</h2><p>Content loaded from original file...</p></div>
-                <div id="factory" class="topic-pane dp-pane"><h2>Factory Pattern</h2><p>Coming soon...</p></div>
+
+                <div id="decorator" class="topic-pane dp-pane">
+                    <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Decorator Pattern</h2>
+                    <div class="study-card">
+                        <div class="card-header"><h2>Notification System</h2><span class="q-tag tag-dp">Decorator</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">public interface Notifier { void send(String msg); }
+
+public class SMSNotifier implements Notifier {
+    public void send(String msg) { System.out.println("SMS: " + msg); }
+}
+
+public abstract class NotifierDecorator implements Notifier {
+    protected Notifier n;
+    public NotifierDecorator(Notifier n) { this.n = n; }
+    public void send(String msg) { n.send(msg); }
+}
+
+public class EmailDecorator extends NotifierDecorator {
+    public EmailDecorator(Notifier n) { super(n); }
+    public void send(String msg) {
+        super.send(msg);
+        System.out.println("Email: " + msg);
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="factory" class="topic-pane dp-pane"><h2>Factory Pattern</h2><p>Factory Pattern content coming soon...</p></div>
             </main>
         </div>
     </div>
