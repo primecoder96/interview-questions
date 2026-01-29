@@ -37,7 +37,6 @@
         .cat-card.dp-card:hover { border-color: var(--dp-color); }
         .cat-card.dp-card h3 { color: var(--dp-color); }
 
-        /* Sidebar Layout */
         .portal-layout { display: flex; gap: 30px; margin-top: 20px; align-items: flex-start; }
         .sidebar { flex: 0 0 220px; position: sticky; top: 80px; height: fit-content; background: var(--secondary-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
         .sidebar h4 { font-size: 0.8rem; text-transform: uppercase; color: #57606a; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
@@ -56,7 +55,6 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cards & Code */
         .study-card { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 24px; background: white; overflow: hidden; }
         .card-header { background: var(--secondary-bg); padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .card-header h2 { font-size: 1rem; margin: 0; color: #1f2328; }
@@ -98,7 +96,7 @@
             </a>
             <a href="#corejava" class="cat-card">
                 <h3>Core Java</h3>
-                <p>Stream API, Multithreading & Volatile.</p>
+                <p>Stream API and Multithreading.</p>
             </a>
             <a href="#designpatterns" class="cat-card dp-card">
                 <h3>Design Patterns</h3>
@@ -159,10 +157,8 @@
                             <pre><code class="language-java">private List&lt;Integer&gt; levelOrderTraversal(Node root) {
     List&lt;Integer&gt; levelOrder = new ArrayList&lt;&gt;();
     if (root == null) return levelOrder;
-    
     Queue&lt;Node&gt; queue = new LinkedList&lt;&gt;();
     queue.add(root);
-    
     while (!queue.isEmpty()) {
         final Node current = queue.poll();
         levelOrder.add(current.data);
@@ -175,7 +171,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="bst" class="topic-pane dsa-pane"><h2>Binary Search Tree</h2><p>Binary Search Tree content coming soon...</p></div>
+                <div id="bst" class="topic-pane dsa-pane"><h2>Binary Search Tree</h2><p>Coming soon...</p></div>
             </main>
         </div>
     </div>
@@ -186,7 +182,7 @@
                 <h4>Java Modules</h4>
                 <ul>
                     <li><a href="javascript:void(0)" class="java-nav active" onclick="switchTopic('java', 'streams', this)">Stream API</a></li>
-                    <li><a href="javascript:void(0)" class="java-nav" onclick="switchTopic('java', 'volatile', this)">Volatile Keyword</a></li>
+                    <li><a href="javascript:void(0)" class="java-nav" onclick="switchTopic('java', 'volatile', this)">Volatile & Threads</a></li>
                     <li><a href="javascript:void(0)" class="java-nav" onclick="switchTopic('java', 'collections', this)">Collections</a></li>
                 </ul>
             </aside>
@@ -232,74 +228,43 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
     .collect(Collectors.toMap(emp -> emp.getName(), emp -> emp.getRating(), (a,b) -> a, LinkedHashMap::new));</code></pre>
                         </div>
                     </div>
+                    <div class="study-card">
+                        <div class="card-header"><h2>Q5: Department-wise Gender Count</h2><span class="q-tag tag-java">Multi-Level Grouping</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">Map&lt;String, Map&lt;String, Long&gt;&gt; deptGenderCount = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.groupingBy(Employee::getGender, Collectors.counting())));</code></pre>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="volatile" class="topic-pane java-pane">
-                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Module: Multithreading & Volatile</h2>
-                    <p class="explanation">The <code>volatile</code> keyword ensures that a variable is always read from and written to Main Memory, bypassing CPU caches.</p>
+                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Module: Volatile & Memory Visibility</h2>
+                    <p class="explanation">The <code>volatile</code> keyword ensures that a variable is always read from and written to Main Memory, preventing threads from caching variables locally.</p>
                     
                     
 
                     <div class="study-card">
-                        <div class="card-header"><h2>Volatile Shutdown Example</h2><span class="q-tag tag-java">Signaling</span></div>
+                        <div class="card-header"><h2>Volatile Visibility Demo</h2><span class="q-tag tag-java">Multithreading</span></div>
                         <div class="card-content">
-                            <p class="explanation">Practice using a flag to stop a thread safely.</p>
-                            <pre><code class="language-java">public class VolatileShutdown {
-    private static volatile boolean active = true;
+                            <pre><code class="language-java">public class VolatileExample {
+    private static volatile boolean flag = true;
 
     public static void main(String[] args) throws InterruptedException {
-        Thread t1 = new Thread(() -> {
-            long count = 0;
-            System.out.println("Worker: Starting loop...");
-            while(active) {
-                // Keep work minimal to observe caching behavior
-                count++;
-            }
-            System.out.println("Worker: Stopped. Final count: " + count);
-        });
+        new Thread(() -> {
+            while (flag) { /* Running... */ }
+            System.out.println("Thread 1: Detected flag change, stopping.");
+        }).start();
 
-        t1.start();
-        Thread.sleep(100);
-        active = false; // Visibility guaranteed by volatile
-        t1.join();
-        System.out.println("Main program exit");
-    }
-}</code></pre>
-                        </div>
-                    </div>
-
-                    <div class="study-card">
-                        <div class="card-header"><h2>Volatile Status Practice</h2><span class="q-tag tag-java">Visibility</span></div>
-                        <div class="card-content">
-                            <p class="explanation">Thread 1 reacts to changes made by Thread 2 immediately.</p>
-                            <pre><code class="language-java">public class VolatileStatus {
-    private static volatile String status = "INITIALIZE";
-
-    public static void main(String[] args) {
-        Thread t1 = new Thread(() -> {
-            System.out.println("Worker 1: Waiting for FINISH...");
-            while (!status.equals("FINISH")) { }
-            System.out.println("Worker 1: Detected FINISH! Execution completed.");
-        });
-
-        Thread t2 = new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-                status = "PROCESSING";
-                Thread.sleep(1000);
-                status = "FINISH";
-            } catch (InterruptedException e) { e.printStackTrace(); }
-        });
-
-        t1.start();
-        t2.start();
+        Thread.sleep(1000);
+        System.out.println("Main: Changing flag to false...");
+        flag = false; 
     }
 }</code></pre>
                         </div>
                     </div>
                 </div>
 
-                <div id="collections" class="topic-pane java-pane"><h2>Collections Framework</h2><p>Collections content coming soon...</p></div>
+                <div id="collections" class="topic-pane java-pane"><h2>Collections Framework</h2><p>Practice coming soon...</p></div>
             </main>
         </div>
     </div>
@@ -337,7 +302,16 @@ public class BankAdapter implements PaymentProcessor {
 
     @Override
     public void processPayments(String name, double amount) {
-        legacyBankAPI.performWireTransfer("CODE_99", name, String.valueOf(amount));
+        String value = String.valueOf(amount);
+        legacyBankAPI.performWireTransfer("CODE_99", name, value);
+    }
+}
+
+public class PaymentService {
+    public static void main(String[] args) {
+        LegacyBankAPI old = new LegacyBankAPI();
+        PaymentProcessor payment = new BankAdapter(old);
+        payment.processPayments("John", 450.00);
     }
 }</code></pre>
                         </div>
@@ -346,33 +320,41 @@ public class BankAdapter implements PaymentProcessor {
 
                 <div id="decorator" class="topic-pane dp-pane">
                     <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Decorator Pattern</h2>
+                    <p class="explanation">Allows behavior to be added to an individual object dynamically.</p>
                     <div class="study-card">
-                        <div class="card-header"><h2>Notification System</h2><span class="q-tag tag-dp">Decorator</span></div>
+                        <div class="card-header"><h2>Dynamic Notification System</h2><span class="q-tag tag-dp">Decorator</span></div>
                         <div class="card-content">
-                            <pre><code class="language-java">public interface Notifier { void send(String msg); }
+                            <pre><code class="language-java">public interface Notifier { void send(String message); }
 
 public class SMSNotifier implements Notifier {
-    public void send(String msg) { System.out.println("SMS: " + msg); }
+    public void send(String message) { System.out.println("Type: SMS | message: " + message); }
 }
 
 public abstract class NotifierDecorator implements Notifier {
-    protected Notifier n;
-    public NotifierDecorator(Notifier n) { this.n = n; }
-    public void send(String msg) { n.send(msg); }
+    protected Notifier notifier; 
+    public NotifierDecorator(Notifier notifier) { this.notifier = notifier; }
+    public void send(String message) { notifier.send(message); }
 }
 
 public class EmailDecorator extends NotifierDecorator {
-    public EmailDecorator(Notifier n) { super(n); }
-    public void send(String msg) {
-        super.send(msg);
-        System.out.println("Email: " + msg);
+    public EmailDecorator(Notifier notifier) { super(notifier); }
+    @Override
+    public void send(String message) {
+        super.send(message);
+        System.out.println("Type: EMAIL | message: " + message);
+    }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        Notifier sms = new EmailDecorator(new SMSNotifier());
+        sms.send("test message");
     }
 }</code></pre>
                         </div>
                     </div>
                 </div>
-
-                <div id="factory" class="topic-pane dp-pane"><h2>Factory Pattern</h2><p>Factory Pattern content coming soon...</p></div>
+                <div id="factory" class="topic-pane dp-pane"><h2>Factory Pattern</h2><p>Coming soon...</p></div>
             </main>
         </div>
     </div>
@@ -382,8 +364,7 @@ public class EmailDecorator extends NotifierDecorator {
     function switchTopic(section, topicId, element) {
         document.querySelectorAll('.' + section + '-pane').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.' + section + '-nav').forEach(n => n.classList.remove('active'));
-        const target = document.getElementById(topicId);
-        if(target) target.classList.add('active');
+        document.getElementById(topicId).classList.add('active');
         element.classList.add('active');
         hljs.highlightAll();
     }
@@ -392,9 +373,7 @@ public class EmailDecorator extends NotifierDecorator {
         const hash = window.location.hash;
         const hero = document.getElementById('hero-area');
         const sections = ['#dsa', '#corejava', '#designpatterns'];
-        
         hero.style.display = sections.includes(hash) ? 'none' : 'block';
-
         sections.forEach(s => {
             const sectionEl = document.querySelector(s);
             if(sectionEl) sectionEl.style.display = (hash === s) ? 'block' : 'none';
