@@ -238,26 +238,67 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                 </div>
 
                 <div id="volatile" class="topic-pane java-pane">
-                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Module: Volatile & Memory Visibility</h2>
-                    <p class="explanation">The <code>volatile</code> keyword ensures that a variable is always read from and written to Main Memory, preventing threads from caching variables locally.</p>
+                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Module: Volatile Examples</h2>
                     
                     
 
                     <div class="study-card">
-                        <div class="card-header"><h2>Volatile Visibility Demo</h2><span class="q-tag tag-java">Multithreading</span></div>
+                        <div class="card-header"><h2>Example 1: Volatile Shutdown</h2><span class="q-tag tag-java">Thread Signaling</span></div>
                         <div class="card-content">
-                            <pre><code class="language-java">public class VolatileExample {
-    private static volatile boolean flag = true;
+                            <pre><code class="language-java">public class VolatileShutdown {
+    private static volatile boolean active = true;
 
     public static void main(String[] args) throws InterruptedException {
-        new Thread(() -> {
-            while (flag) { /* Running... */ }
-            System.out.println("Thread 1: Detected flag change, stopping.");
-        }).start();
+        Thread t1 = new Thread(() -> {
+            long count = 0;
+            System.out.println("Worker: Starting loop...");
+            while(active) {
+                System.out.println(count++);
+            }
+            System.out.println("Worker:completes");
+        });
 
-        Thread.sleep(1000);
-        System.out.println("Main: Changing flag to false...");
-        flag = false; 
+        t1.start();
+        Thread.sleep(100);
+        active = false;
+        t1.join();
+        System.out.println("main program exit");
+    }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="study-card">
+                        <div class="card-header"><h2>Example 2: Volatile Status</h2><span class="q-tag tag-java">Visibility Guarantee</span></div>
+                        <div class="card-content">
+                            <pre><code class="language-java">public class VolatileStatus {
+    // Volatile ensures Thread 1 sees the updates made by Thread 2 immediately
+    private static volatile String status = "INITIALIZE";
+
+    public static void main(String[] args) {
+        // Worker 1: The Observer
+        Thread t1 = new Thread(() -> {
+            System.out.println("Worker 1: Waiting for FINISH...");
+            while (!status.equals("FINISH")) {
+                // Spinning until status changes in Main Memory
+            }
+            System.out.println("Worker 1: Detected FINISH! Execution completed.");
+        });
+
+        // Worker 2: The Updater
+        Thread t2 = new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                status = "PROCESSING";
+                Thread.sleep(1000);
+                status = "FINISH";
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        t1.start();
+        t2.start();
     }
 }</code></pre>
                         </div>
@@ -320,7 +361,6 @@ public class PaymentService {
 
                 <div id="decorator" class="topic-pane dp-pane">
                     <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Decorator Pattern</h2>
-                    <p class="explanation">Allows behavior to be added to an individual object dynamically.</p>
                     <div class="study-card">
                         <div class="card-header"><h2>Dynamic Notification System</h2><span class="q-tag tag-dp">Decorator</span></div>
                         <div class="card-content">
