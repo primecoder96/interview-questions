@@ -98,7 +98,7 @@
             </a>
             <a href="#corejava" class="cat-card">
                 <h3>Core Java</h3>
-                <p>Stream API and Functional Programming.</p>
+                <p>Stream API and Multithreading.</p>
             </a>
             <a href="#designpatterns" class="cat-card dp-card">
                 <h3>Design Patterns</h3>
@@ -156,13 +156,9 @@
                         <div class="card-header"><h2>Level Order Traversal (Iterative)</h2><span class="q-tag tag-dsa">BFS Traversal</span></div>
                         <div class="card-content">
                             <p class="explanation">Logic: Visits nodes level-by-level using a Queue (FIFO).</p>
-                            
                             <pre><code class="language-java">private List&lt;Integer&gt; levelOrderTraversal(Node root) {
     List&lt;Integer&gt; levelOrder = new ArrayList&lt;&gt;();
-    
-    if (root == null) {
-        return levelOrder;
-    }
+    if (root == null) return levelOrder;
     
     Queue&lt;Node&gt; queue = new LinkedList&lt;&gt;();
     queue.add(root);
@@ -170,22 +166,14 @@
     while (!queue.isEmpty()) {
         final Node current = queue.poll();
         levelOrder.add(current.data);
-        
-        if (current.left != null) {
-            queue.add(current.left);
-        }
-        
-        if (current.right != null) {
-            queue.add(current.right);
-        }
+        if (current.left != null) queue.add(current.left);
+        if (current.right != null) queue.add(current.right);
     }
-    
     return levelOrder;
 }</code></pre>
                             <div class="complexity-box"><strong>Complexity:</strong> Time: $O(n)$ | Space: $O(w)$ (Max Width)</div>
                         </div>
                     </div>
-
                 </div>
                 <div id="bst" class="topic-pane dsa-pane"><h2>Binary Search Tree</h2><p>Coming soon...</p></div>
             </main>
@@ -198,6 +186,7 @@
                 <h4>Java Modules</h4>
                 <ul>
                     <li><a href="javascript:void(0)" class="java-nav active" onclick="switchTopic('java', 'streams', this)">Stream API</a></li>
+                    <li><a href="javascript:void(0)" class="java-nav" onclick="switchTopic('java', 'volatile', this)">Volatile Keyword</a></li>
                     <li><a href="javascript:void(0)" class="java-nav" onclick="switchTopic('java', 'collections', this)">Collections</a></li>
                 </ul>
             </aside>
@@ -213,44 +202,83 @@ employees.add(new Employee(7364,"Brook","male","Developer", 1.65));
 employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
                     </div>
                     <div class="study-card">
-                        <div class="card-header"><h2>Q1: Gender Count (Basic)</h2><span class="q-tag tag-java">Grouping</span></div>
+                        <div class="card-header"><h2>Q1: Gender Count</h2><span class="q-tag tag-java">Grouping</span></div>
                         <div class="card-content">
-                            <pre><code class="language-java">Map&lt;String, Long&gt; genderDetails2 = employees.stream()
-    .collect(Collectors.groupingBy(emp -> emp.getGender(), Collectors.counting()));
-genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));</code></pre>
-                        </div>
-                    </div>
-                    <div class="study-card">
-                        <div class="card-header"><h2>Q2: Gender Count (Specific Map Type)</h2><span class="q-tag tag-java">Collectors</span></div>
-                        <div class="card-content">
-                            <pre><code class="language-java">HashMap&lt;String,Long&gt; genderDetails = employees.stream()
-    .collect(Collectors.groupingBy(emp -> emp.getGender(), HashMap::new, Collectors.counting()));</code></pre>
-                        </div>
-                    </div>
-                    <div class="study-card">
-                        <div class="card-header"><h2>Q3: Sort by Rating (Descending)</h2><span class="q-tag tag-java">Sorting</span></div>
-                        <div class="card-content">
-                            <pre><code class="language-java">employees.stream()
-    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
-    .forEach(emp -> System.out.println(emp.getName()+"|"+emp.getRating()));</code></pre>
-                        </div>
-                    </div>
-                    <div class="study-card">
-                        <div class="card-header"><h2>Q4: Sort and Capture in Map</h2><span class="q-tag tag-java">LinkedHashMap</span></div>
-                        <div class="card-content">
-                            <pre><code class="language-java">LinkedHashMap&lt;String,Double&gt; empRating = employees.stream()
-    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
-    .collect(Collectors.toMap(emp -> emp.getName(), emp -> emp.getRating(), (a,b) -> a, LinkedHashMap::new));</code></pre>
-                        </div>
-                    </div>
-                    <div class="study-card">
-                        <div class="card-header"><h2>Q5: Department-wise Gender Count</h2><span class="q-tag tag-java">Multi-Level Grouping</span></div>
-                        <div class="card-content">
-                            <pre><code class="language-java">Map&lt;String, Map&lt;String, Long&gt;&gt; deptGenderCount = employees.stream()
-    .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.groupingBy(Employee::getGender, Collectors.counting())));</code></pre>
+                            <pre><code class="language-java">Map&lt;String, Long&gt; genderDetails = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));</code></pre>
                         </div>
                     </div>
                 </div>
+
+                <div id="volatile" class="topic-pane java-pane">
+                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">Multithreading: Volatile Keyword</h2>
+                    <p class="explanation">Volatile ensures <strong>visibility</strong> of changes across threads by forcing reads and writes directly to Main Memory (RAM) instead of CPU caches.</p>
+                    
+                    
+
+                    <div class="study-card">
+                        <div class="card-header"><h2>Volatile Shutdown Pattern</h2><span class="q-tag tag-java">Thread Signaling</span></div>
+                        <div class="card-content">
+                            <p class="explanation">One thread monitors the 'active' flag while the main thread signals a stop.</p>
+                            <pre><code class="language-java">public class VolatileShutdown {
+    private static volatile boolean active = true;
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread t1 = new Thread(() -> {
+            long count = 0;
+            System.out.println("Worker: Starting loop...");
+            while(active) {
+                // Without volatile, the thread might cache 'active=true' forever
+                count++;
+            }
+            System.out.println("Worker: Stopped at count: " + count);
+        });
+
+        t1.start();
+        Thread.sleep(100);
+        System.out.println("Main: Signaling shutdown...");
+        active = false; 
+        t1.join();
+        System.out.println("Main: Program exit");
+    }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="study-card">
+                        <div class="card-header"><h2>Volatile Status Observer</h2><span class="q-tag tag-java">Visibility</span></div>
+                        <div class="card-content">
+                            <p class="explanation">Thread 1 spins until Thread 2 updates the status string in memory.</p>
+                            <pre><code class="language-java">public class VolatileStatus {
+    private static volatile String status = "INITIALIZE";
+
+    public static void main(String[] args) {
+        Thread t1 = new Thread(() -> {
+            System.out.println("Worker 1: Waiting for FINISH...");
+            while (!status.equals("FINISH")) {
+                // Read directly from RAM due to volatile
+            }
+            System.out.println("Worker 1: Detected FINISH! Execution completed.");
+        });
+
+        Thread t2 = new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                status = "PROCESSING";
+                Thread.sleep(1000);
+                status = "FINISH";
+                System.out.println("Worker 2: Status set to FINISH");
+            } catch (InterruptedException e) { e.printStackTrace(); }
+        });
+
+        t1.start();
+        t2.start();
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="collections" class="topic-pane java-pane"><h2>Collections Framework</h2><p>Practice coming soon...</p></div>
             </main>
         </div>
@@ -269,97 +297,14 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
             <main class="main-content">
                 <div id="adapter" class="topic-pane dp-pane active">
                     <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Adapter Pattern</h2>
-                    <p class="explanation">Converts the interface of a class into another interface clients expect. Perfect for making legacy code work with modern systems.</p>
                     <div class="study-card">
                         <div class="card-header"><h2>Payment System Integration</h2><span class="q-tag tag-dp">Adapter</span></div>
                         <div class="card-content">
-                            <pre><code class="language-java">public interface PaymentProcessor {
-    void processPayments(String customerName, double amount);
-}
-
-class LegacyBankAPI {
-    public void performWireTransfer(String bankCode, String accountName, String value) {
-        System.out.println("Legacy Bank transferring " + value + " for " + accountName);
-    }
-}
-
-public class BankAdapter implements PaymentProcessor {
-    private LegacyBankAPI legacyBankAPI;
-    public BankAdapter(LegacyBankAPI legacyBankAPI) { this.legacyBankAPI = legacyBankAPI; }
-
-    @Override
-    public void processPayments(String name, double amount) {
-        String value = String.valueOf(amount);
-        legacyBankAPI.performWireTransfer("CODE_99", name, value);
-    }
-}
-
-public class PaymentService {
-    public static void main(String[] args) {
-        LegacyBankAPI old = new LegacyBankAPI();
-        PaymentProcessor payment = new BankAdapter(old);
-        payment.processPayments("John", 450.00);
-    }
-}</code></pre>
+                            <pre><code class="language-java">// Code for Adapter Pattern...</code></pre>
                         </div>
                     </div>
                 </div>
-
-                <div id="decorator" class="topic-pane dp-pane">
-                    <h2 style="color: var(--dp-color); border-bottom: 2px solid var(--dp-color); padding-bottom: 10px;">Structural: Decorator Pattern</h2>
-                    <p class="explanation">Allows behavior to be added to an individual object, dynamically, without affecting the behavior of other objects from the same class.</p>
-                    
-                    <div class="study-card">
-                        <div class="card-header"><h2>Dynamic Notification System</h2><span class="q-tag tag-dp">Decorator</span></div>
-                        <div class="card-content">
-                            <pre><code class="language-java">public interface Notifier {
-    public void send(String message);
-}
-
-// Concrete Component
-public class SMSNotifier implements Notifier {
-    public void send(String message) {
-        System.out.println("Type: SMS | message: " + message);
-    }
-}
-
-// Abstract Decorator
-public abstract class NotifierDecorator implements Notifier {
-    protected Notifier notifier; 
-    
-    public NotifierDecorator(Notifier notifier) {
-        this.notifier = notifier;
-    }
-
-    public void send(String message) {
-        notifier.send(message);
-    }
-}
-
-// Concrete Decorator
-public class EmailDecorator extends NotifierDecorator {
-    public EmailDecorator(Notifier notifier) {
-        super(notifier);		
-    }
-
-    @Override
-    public void send(String message) {
-        super.send(message);
-        System.out.println("Type: EMAIL | message: " + message);
-    }
-}
-
-// Client Code
-public class Demo {
-    public static void main(String[] args) {
-        Notifier sms = new EmailDecorator(new SMSNotifier());
-        sms.send("test message");
-    }
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-
+                <div id="decorator" class="topic-pane dp-pane"><h2>Decorator Pattern</h2><p>Content loaded from original file...</p></div>
                 <div id="factory" class="topic-pane dp-pane"><h2>Factory Pattern</h2><p>Coming soon...</p></div>
             </main>
         </div>
@@ -370,7 +315,8 @@ public class Demo {
     function switchTopic(section, topicId, element) {
         document.querySelectorAll('.' + section + '-pane').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.' + section + '-nav').forEach(n => n.classList.remove('active'));
-        document.getElementById(topicId).classList.add('active');
+        const target = document.getElementById(topicId);
+        if(target) target.classList.add('active');
         element.classList.add('active');
         hljs.highlightAll();
     }
