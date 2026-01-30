@@ -457,6 +457,8 @@ private Node insertRecursive(Node current, int key) {
                         <li><a href="javascript:void(0)" class="java-nav active"
                                 onclick="switchTopic('java', 'streams', this)">Stream API</a></li>
                         <li><a href="javascript:void(0)" class="java-nav"
+                                onclick="switchTopic('java', 'interrupts', this)">Interruption Handling</a></li>
+                        <li><a href="javascript:void(0)" class="java-nav"
                                 onclick="switchTopic('java', 'volatile', this)">Volatile & Threads</a></li>
                         <li><a href="javascript:void(0)" class="java-nav"
                                 onclick="switchTopic('java', 'collections', this)">Collections</a></li>
@@ -523,6 +525,52 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                             <div class="card-content">
                                 <pre><code class="language-java">Map&lt;String, Map&lt;String, Long&gt;&gt; deptGenderCount = employees.stream()
     .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.groupingBy(Employee::getGender, Collectors.counting())));</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="interrupts" class="topic-pane java-pane">
+                        <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                            Module: Thread Interruption Logic</h2>
+                        
+                        <div class="study-card">
+                            <div class="card-header">
+                                <h2>Interruption Best Practice</h2><span class="q-tag tag-java">Multithreading</span>
+                            </div>
+                            <div class="card-content">
+                                <p class="explanation">This example demonstrates the "Double Defense" strategy: checking for interrupts during active logic (isInterrupted) and handling blocking calls (sleep).</p>
+                                <pre><code class="language-java">public class SimpleInterruptDemo {
+    public static void main(String[] args) throws InterruptedException {
+        Thread worker = new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                // 1. MANUAL CHECK: For active business logic
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("Worker: The flag was manually inspected and stopping at :" + i);
+                    return; // Graceful exit
+                }
+
+                System.out.println("count :" + i);
+
+                try {
+                    // 2. BLOCKING CALL: JVM automatically checks flag here
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    System.out.println("Worker interruption handled. Propagating signal...");
+                    // GOLDEN RULE: Restore the interrupt status
+                    Thread.currentThread().interrupt();
+                    return; // Without return, thread would continue 'zombie' style
+                }
+            }
+        });
+
+        worker.start();
+        Thread.sleep(3500); // Let it run briefly
+
+        System.out.println("Main: Interrupting worker...");
+        worker.interrupt();
+        System.out.println("Main Thread execution completes.");
+    }
+}</code></pre>
                             </div>
                         </div>
                     </div>
@@ -684,7 +732,7 @@ public class SMSNotifier implements Notifier {
 }
 
 public abstract class NotifierDecorator implements Notifier {
-    protected Notifier notifier; 
+    protected Notifier notifier;	
     public NotifierDecorator(Notifier notifier) { this.notifier = notifier; }
     public void send(String message) { notifier.send(message); }
 }
