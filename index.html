@@ -578,7 +578,7 @@ numList.forEach(num -> {
     break; 
 });</code></pre>
                                     <div class="complexity-box" style="border-left-color: #0969da; background: #fff8c5;">
-                                        <strong>Solution:</strong> This code will <b>not compile</b>. The <code>break</code> keyword can only be used inside loops (for, while) or switches. A lambda expression is a function, not a loop!
+                                        <strong>Solution:</strong> <code>break</code> is a control-flow keyword for <strong>loops</strong> (for, while). <code>forEach</code> is a <strong>method</strong>. You cannot use <code>break</code> to exit a method.
                                     </div>
                                 </div>
                             </div>
@@ -876,4 +876,5 @@ public class Demo {
 </body>
 
 </html>
+
 
