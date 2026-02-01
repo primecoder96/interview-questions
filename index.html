@@ -174,6 +174,36 @@
             font-weight: 600;
         }
 
+        /* Sub-tab styling */
+        .sub-tab-nav {
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .sub-tab-link {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #57606a;
+            border-bottom: 2px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .sub-tab-link.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .sub-pane {
+            display: none;
+        }
+
+        .sub-pane.active {
+            display: block;
+        }
+
         .main-content {
             flex: 1;
             min-width: 0;
@@ -466,85 +496,91 @@ private Node insertRecursive(Node current, int key) {
                 </aside>
                 <main class="main-content">
                     <div id="streams" class="topic-pane java-pane active">
-                        <h2
-                            style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                        <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                             Module: Stream API Practice</h2>
-                        
-                        <div class="study-card">
-                            <div class="card-header">
-                                <h2>Guess the Output: Break in forEach</h2><span class="q-tag tag-java">Syntax Logic</span>
+
+                        <div class="sub-tab-nav">
+                            <div class="sub-tab-link active" onclick="switchSubTab(this, 'stream-solutions')">Practical Solutions</div>
+                            <div class="sub-tab-link" onclick="switchSubTab(this, 'stream-pitfalls')">Interview Pitfalls</div>
+                        </div>
+
+                        <div id="stream-solutions" class="sub-pane active">
+                            <div class="data-setup">
+                                <strong>Source Dataset:</strong>
+                                <pre><code class="language-java">List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
+employees.add(new Employee(3345,"john","male","HR",3.45));
+employees.add(new Employee(3737,"Mark","male","Hardware",4.87));
+employees.add(new Employee(7364,"Brook","male","Developer", 1.65));
+employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
                             </div>
-                            <div class="card-content">
-                                <p class="explanation">Observe the code below. Will it compile? If so, what is the output?</p>
-                                <pre><code class="language-java">List&lt;Integer&gt; numList = List.of(1, 2, 3, 4);
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Q1: Gender Count (Basic)</h2><span class="q-tag tag-java">Grouping</span>
+                                </div>
+                                <div class="card-content">
+                                    <pre><code class="language-java">Map&lt;String, Long&gt; genderDetails2 = employees.stream()
+    .collect(Collectors.groupingBy(emp -> emp.getGender(), Collectors.counting()));
+genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));</code></pre>
+                                </div>
+                            </div>
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Q2: Gender Count (Specific Map Type)</h2><span class="q-tag tag-java">Collectors</span>
+                                </div>
+                                <div class="card-content">
+                                    <pre><code class="language-java">HashMap&lt;String,Long&gt; genderDetails = employees.stream()
+    .collect(Collectors.groupingBy(emp -> emp.getGender(), HashMap::new, Collectors.counting()));</code></pre>
+                                </div>
+                            </div>
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Q3: Sort by Rating (Descending)</h2><span class="q-tag tag-java">Sorting</span>
+                                </div>
+                                <div class="card-content">
+                                    <pre><code class="language-java">employees.stream()
+    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
+    .forEach(emp -> System.out.println(emp.getName()+"|"+emp.getRating()));</code></pre>
+                                </div>
+                            </div>
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Q4: Sort and Capture in Map</h2><span class="q-tag tag-java">LinkedHashMap</span>
+                                </div>
+                                <div class="card-content">
+                                    <pre><code class="language-java">LinkedHashMap&lt;String,Double&gt; empRating = employees.stream()
+    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
+    .collect(Collectors.toMap(emp -> emp.getName(), emp -> emp.getRating(), (a,b) -> a, LinkedHashMap::new));</code></pre>
+                                </div>
+                            </div>
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Q5: Department-wise Gender Count</h2><span class="q-tag tag-java">Multi-Level Grouping</span>
+                                </div>
+                                <div class="card-content">
+                                    <pre><code class="language-java">Map&lt;String, Map&lt;String, Long&gt;&gt; deptGenderCount = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.groupingBy(Employee::getGender, Collectors.counting())));</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="stream-pitfalls" class="sub-pane">
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Guess the Output: Break in forEach</h2><span class="q-tag tag-java">Syntax Logic</span>
+                                </div>
+                                <div class="card-content">
+                                    <p class="explanation">Observe the code below. Will it compile? If so, what is the output?</p>
+                                    <pre><code class="language-java">List&lt;Integer&gt; numList = List.of(1, 2, 3, 4);
 
 numList.forEach(num -> {
     System.out.println(num);
     // Guess what happens if the following code executes:
     break; 
 });</code></pre>
-                                <div class="complexity-box" style="border-left-color: #0969da; background: #fff8c5;">
-                                    <strong>Solution:</strong> This code will <b>not compile</b>. The <code>break</code> keyword can only be used inside loops (for, while) or switches. A lambda expression is a function, not a loop!
+                                    <div class="complexity-box" style="border-left-color: #0969da; background: #fff8c5;">
+                                        <strong>Solution:</strong> This code will <b>not compile</b>. The <code>break</code> keyword can only be used inside loops (for, while) or switches. A lambda expression is a function, not a loop!
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="data-setup">
-                            <strong>Source Dataset:</strong>
-                            <pre><code class="language-java">List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
-employees.add(new Employee(3345,"john","male","HR",3.45));
-employees.add(new Employee(3737,"Mark","male","Hardware",4.87));
-employees.add(new Employee(7364,"Brook","male","Developer", 1.65));
-employees.add(new Employee(222,"Micky","female","CEO",3.65));</code></pre>
-                        </div>
-                        <div class="study-card">
-                            <div class="card-header">
-                                <h2>Q1: Gender Count (Basic)</h2><span class="q-tag tag-java">Grouping</span>
-                            </div>
-                            <div class="card-content">
-                                <pre><code class="language-java">Map&lt;String, Long&gt; genderDetails2 = employees.stream()
-    .collect(Collectors.groupingBy(emp -> emp.getGender(), Collectors.counting()));
-genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));</code></pre>
-                            </div>
-                        </div>
-                        <div class="study-card">
-                            <div class="card-header">
-                                <h2>Q2: Gender Count (Specific Map Type)</h2><span
-                                    class="q-tag tag-java">Collectors</span>
-                            </div>
-                            <div class="card-content">
-                                <pre><code class="language-java">HashMap&lt;String,Long&gt; genderDetails = employees.stream()
-    .collect(Collectors.groupingBy(emp -> emp.getGender(), HashMap::new, Collectors.counting()));</code></pre>
-                            </div>
-                        </div>
-                        <div class="study-card">
-                            <div class="card-header">
-                                <h2>Q3: Sort by Rating (Descending)</h2><span class="q-tag tag-java">Sorting</span>
-                            </div>
-                            <div class="card-content">
-                                <pre><code class="language-java">employees.stream()
-    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
-    .forEach(emp -> System.out.println(emp.getName()+"|"+emp.getRating()));</code></pre>
-                            </div>
-                        </div>
-                        <div class="study-card">
-                            <div class="card-header">
-                                <h2>Q4: Sort and Capture in Map</h2><span class="q-tag tag-java">LinkedHashMap</span>
-                            </div>
-                            <div class="card-content">
-                                <pre><code class="language-java">LinkedHashMap&lt;String,Double&gt; empRating = employees.stream()
-    .sorted(Comparator.comparingDouble(Employee::getRating).reversed())
-    .collect(Collectors.toMap(emp -> emp.getName(), emp -> emp.getRating(), (a,b) -> a, LinkedHashMap::new));</code></pre>
-                            </div>
-                        </div>
-                        <div class="study-card">
-                            <div class="card-header">
-                                <h2>Q5: Department-wise Gender Count</h2><span class="q-tag tag-java">Multi-Level
-                                    Grouping</span>
-                            </div>
-                            <div class="card-content">
-                                <pre><code class="language-java">Map&lt;String, Map&lt;String, Long&gt;&gt; deptGenderCount = employees.stream()
-    .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.groupingBy(Employee::getGender, Collectors.counting())));</code></pre>
                             </div>
                         </div>
                     </div>
@@ -788,6 +824,17 @@ public class Demo {
             document.querySelectorAll('.' + section + '-nav').forEach(n => n.classList.remove('active'));
             document.getElementById(topicId).classList.add('active');
             element.classList.add('active');
+            hljs.highlightAll();
+        }
+
+        // Logic for Nested Sub-tabs
+        function switchSubTab(element, paneId) {
+            const container = element.parentElement.parentElement;
+            container.querySelectorAll('.sub-tab-link').forEach(link => link.classList.remove('active'));
+            container.querySelectorAll('.sub-pane').forEach(pane => pane.classList.remove('active'));
+            
+            element.classList.add('active');
+            document.getElementById(paneId).classList.add('active');
             hljs.highlightAll();
         }
 
