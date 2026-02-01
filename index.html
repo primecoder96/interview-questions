@@ -469,6 +469,26 @@ private Node insertRecursive(Node current, int key) {
                         <h2
                             style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                             Module: Stream API Practice</h2>
+                        
+                        <div class="study-card">
+                            <div class="card-header">
+                                <h2>Guess the Output: Break in forEach</h2><span class="q-tag tag-java">Syntax Logic</span>
+                            </div>
+                            <div class="card-content">
+                                <p class="explanation">Observe the code below. Will it compile? If so, what is the output?</p>
+                                <pre><code class="language-java">List&lt;Integer&gt; numList = List.of(1, 2, 3, 4);
+
+numList.forEach(num -> {
+    System.out.println(num);
+    // Guess what happens if the following code executes:
+    break; 
+});</code></pre>
+                                <div class="complexity-box" style="border-left-color: #0969da; background: #fff8c5;">
+                                    <strong>Solution:</strong> This code will <b>not compile</b>. The <code>break</code> keyword can only be used inside loops (for, while) or switches. A lambda expression is a function, not a loop!
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="data-setup">
                             <strong>Source Dataset:</strong>
                             <pre><code class="language-java">List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
@@ -579,8 +599,6 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                         <h2
                             style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                             Module: Volatile Examples</h2>
-
-
 
                         <div class="study-card">
                             <div class="card-header">
