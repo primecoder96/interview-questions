@@ -583,6 +583,27 @@ numList.forEach(num -> {
                                 </div>
                             </div>
                         </div>
+                        <div class="study-card">
+        <div class="card-header">
+            <h2>Pitfall 2: Return in forEach</h2><span class="q-tag tag-java">Logic Trap</span>
+        </div>
+        <div class="card-content">
+            <p class="explanation">What is the output of this snippet?</p>
+            <pre><code class="language-java">List&lt;Integer&gt; numList = List.of(1, 2, 3, 4, 5, 6, 7, 8, 3);
+
+numList.forEach(num -> {
+    if (num >= 5) {
+        System.out.println(5);
+        return; 
+    }
+    System.out.println(num);
+});</code></pre>
+            <div class="complexity-box" style="border-left-color: #0969da; background: #e7f3ff;">
+                <strong>Output:</strong> 1, 2, 3, 4, 5, 5, 5, 5, 3<br>
+                <strong>The "Why":</strong> In a standard loop, <code>return</code> exits the whole function. In a Lambda, <code>return</code> acts like a <code>continue</code>. It exits the <em>current execution</em> of the lambda for that specific number and immediately starts the next one.
+            </div>
+        </div>
+    </div>
                     </div>
 
                     <div id="interrupts" class="topic-pane java-pane">
@@ -855,3 +876,4 @@ public class Demo {
 </body>
 
 </html>
+
