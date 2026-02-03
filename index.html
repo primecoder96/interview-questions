@@ -318,6 +318,60 @@
             font-size: 0.9rem;
         }
 
+        /* Table Styles for Interview Questions */
+        .q-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .q-table th,
+        .q-table td {
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .q-table th {
+            background: var(--secondary-bg);
+            color: #6f42c1;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .q-table th:first-child,
+        .q-table td:first-child {
+            width: 50px;
+            text-align: center;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .q-table tr:hover {
+            background: #fcfcfc;
+        }
+
+        /* Unique colors for interview section */
+        .int-card:hover {
+            border-color: #6f42c1;
+            box-shadow: 0 4px 15px rgba(111, 66, 193, 0.15);
+        }
+
+        .int-card h3 {
+            color: #6f42c1;
+        }
+
+        .int-nav.active {
+            background: #f0f0ff;
+            color: #6f42c1;
+            font-weight: 600;
+        }
+
         @media (max-width: 850px) {
             .category-grid {
                 grid-template-columns: 1fr;
@@ -343,6 +397,7 @@
             <a href="#dsa" class="nav-link">DSA</a>
             <a href="#corejava" class="nav-link">Core Java</a>
             <a href="#designpatterns" class="nav-link">Design Patterns</a>
+            <a href="#interview-qs" class="nav-link">Interview Qs</a>
         </div>
     </nav>
 
@@ -362,6 +417,10 @@
                 <a href="#designpatterns" class="cat-card dp-card">
                     <h3>Design Patterns</h3>
                     <p>Adapter, Factory, and Structural Patterns.</p>
+                </a>
+                <a href="#interview-qs" class="cat-card int-card">
+                    <h3>Interview Questions</h3>
+                    <p>Top Questions for Java, Spring & Patterns.</p>
                 </a>
             </div>
         </div>
@@ -474,6 +533,37 @@ private Node insertRecursive(Node current, int key) {
                                 </div>
                             </div>
                         </div>
+
+                        <div class="study-card">
+                            <div class="card-header">
+                                <h2>BST Search (Iterative)</h2><span class="q-tag tag-dsa">BST Operations</span>
+                            </div>
+                            <div class="card-content">
+                                <p class="explanation">Logic: Iteratively traverse to find the key. Move left or right
+                                    based on value comparison.</p>
+                                <pre><code class="language-java">public boolean contains(int key){
+    return searchKeyIterative(root,key) != null;
+}
+
+private Node searchKeyIterative(Node root, int key) {
+    Node current = root;
+
+    while (current != null) {
+        if (current.data == key) {
+            return current;
+        } else if (key > current.data) {
+            current = current.right;
+        } else {
+            current = current.left;
+        }
+    }
+
+    return null;
+}</code></pre>
+                                <div class="complexity-box"><strong>Complexity:</strong> Time: $O(h)$ | Space: $O(1)$
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </main>
             </div>
@@ -496,12 +586,15 @@ private Node insertRecursive(Node current, int key) {
                 </aside>
                 <main class="main-content">
                     <div id="streams" class="topic-pane java-pane active">
-                        <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                        <h2
+                            style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                             Module: Stream API Practice</h2>
 
                         <div class="sub-tab-nav">
-                            <div class="sub-tab-link active" onclick="switchSubTab(this, 'stream-solutions')">Practical Solutions</div>
-                            <div class="sub-tab-link" onclick="switchSubTab(this, 'stream-pitfalls')">Interview Pitfalls</div>
+                            <div class="sub-tab-link active" onclick="switchSubTab(this, 'stream-solutions')">Practical
+                                Solutions</div>
+                            <div class="sub-tab-link" onclick="switchSubTab(this, 'stream-pitfalls')">Interview Pitfalls
+                            </div>
                         </div>
 
                         <div id="stream-solutions" class="sub-pane active">
@@ -525,7 +618,8 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                             </div>
                             <div class="study-card">
                                 <div class="card-header">
-                                    <h2>Q2: Gender Count (Specific Map Type)</h2><span class="q-tag tag-java">Collectors</span>
+                                    <h2>Q2: Gender Count (Specific Map Type)</h2><span
+                                        class="q-tag tag-java">Collectors</span>
                                 </div>
                                 <div class="card-content">
                                     <pre><code class="language-java">HashMap&lt;String,Long&gt; genderDetails = employees.stream()
@@ -544,7 +638,8 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                             </div>
                             <div class="study-card">
                                 <div class="card-header">
-                                    <h2>Q4: Sort and Capture in Map</h2><span class="q-tag tag-java">LinkedHashMap</span>
+                                    <h2>Q4: Sort and Capture in Map</h2><span
+                                        class="q-tag tag-java">LinkedHashMap</span>
                                 </div>
                                 <div class="card-content">
                                     <pre><code class="language-java">LinkedHashMap&lt;String,Double&gt; empRating = employees.stream()
@@ -554,22 +649,44 @@ genderDetails2.forEach((k,v) -> System.out.println("gender : "+k+" count :"+v));
                             </div>
                             <div class="study-card">
                                 <div class="card-header">
-                                    <h2>Q5: Department-wise Gender Count</h2><span class="q-tag tag-java">Multi-Level Grouping</span>
+                                    <h2>Q5: Department-wise Gender Count</h2><span class="q-tag tag-java">Multi-Level
+                                        Grouping</span>
                                 </div>
                                 <div class="card-content">
                                     <pre><code class="language-java">Map&lt;String, Map&lt;String, Long&gt;&gt; deptGenderCount = employees.stream()
     .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.groupingBy(Employee::getGender, Collectors.counting())));</code></pre>
                                 </div>
                             </div>
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Q6: Max Rating</h2><span class="q-tag tag-java">Max & Optional</span>
+                                </div>
+                                <div class="card-content">
+                                    <pre><code class="language-java">// Approach 1: Map to DoubleStream then max
+double val1 = employees.stream()
+    .mapToDouble((Employee e) -> e.getRating())
+    .max()
+    .orElse(0.0);
+
+// Approach 2: Stream max with Comparator then map
+double val2 = employees.stream()
+    .max(Comparator.comparingDouble(e -> e.getRating()))
+    .map(Employee::getRating) // This map is an Optional Method, not a Stream Method
+    .orElse(0.0);</code></pre>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div id="stream-pitfalls" class="sub-pane">
                             <div class="study-card">
                                 <div class="card-header">
-                                    <h2>Guess the Output: Break in forEach</h2><span class="q-tag tag-java">Syntax Logic</span>
+                                    <h2>Guess the Output: Break in forEach</h2><span class="q-tag tag-java">Syntax
+                                        Logic</span>
                                 </div>
                                 <div class="card-content">
-                                    <p class="explanation">Observe the code below. Will it compile? If so, what is the output?</p>
+                                    <p class="explanation">Observe the code below. Will it compile? If so, what is the
+                                        output?</p>
                                     <pre><code class="language-java">List&lt;Integer&gt; numList = List.of(1, 2, 3, 4);
 
 numList.forEach(num -> {
@@ -577,19 +694,21 @@ numList.forEach(num -> {
     // Guess what happens if the following code executes:
     break; 
 });</code></pre>
-                                    <div class="complexity-box" style="border-left-color: #0969da; background: #fff8c5;">
-                                        <strong>Solution:</strong> <code>break</code> is a control-flow keyword for <strong>loops</strong> (for, while). <code>forEach</code> is a <strong>method</strong>. You cannot use <code>break</code> to exit a method.
+                                    <div class="complexity-box"
+                                        style="border-left-color: #0969da; background: #fff8c5;">
+                                        <strong>Solution:</strong> <code>break</code> is a control-flow keyword for
+                                        <strong>loops</strong> (for, while). <code>forEach</code> is a
+                                        <strong>method</strong>. You cannot use <code>break</code> to exit a method.
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="study-card">
-        <div class="card-header">
-            <h2>Pitfall 2: Return in forEach</h2><span class="q-tag tag-java">Logic Trap</span>
-        </div>
-        <div class="card-content">
-            <p class="explanation">What is the output of this snippet?</p>
-            <pre><code class="language-java">List&lt;Integer&gt; numList = List.of(1, 2, 3, 4, 5, 6, 7, 8, 3);
+                            <div class="study-card">
+                                <div class="card-header">
+                                    <h2>Pitfall 2: Return in forEach</h2><span class="q-tag tag-java">Logic Trap</span>
+                                </div>
+                                <div class="card-content">
+                                    <p class="explanation">What is the output of this snippet?</p>
+                                    <pre><code class="language-java">List&lt;Integer&gt; numList = List.of(1, 2, 3, 4, 5, 6, 7, 8, 3);
 
 numList.forEach(num -> {
     if (num >= 5) {
@@ -598,24 +717,34 @@ numList.forEach(num -> {
     }
     System.out.println(num);
 });</code></pre>
-            <div class="complexity-box" style="border-left-color: #0969da; background: #e7f3ff;">
-                <strong>Output:</strong> 1, 2, 3, 4, 5, 5, 5, 5, 3<br>
-                <strong>The "Why":</strong> In a standard loop, <code>return</code> exits the whole function. In a Lambda, <code>return</code> acts like a <code>continue</code>. It exits the <em>current execution</em> of the lambda for that specific number and immediately starts the next one.
-            </div>
-        </div>
-    </div>
+                                    <div class="complexity-box"
+                                        style="border-left-color: #0969da; background: #e7f3ff;">
+                                        <strong>Output:</strong> 1, 2, 3, 4, 5, 5, 5, 5, 3<br>
+                                        <strong>The "Why":</strong> In a standard loop, <code>return</code> exits the
+                                        whole
+                                        function. In a Lambda, <code>return</code> acts like a <code>continue</code>. It
+                                        exits the <em>current execution</em> of the lambda for that specific number and
+                                        immediately starts the next one.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div id="interrupts" class="topic-pane java-pane">
-                        <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                        <h2
+                            style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
                             Module: Thread Interruption Logic</h2>
-                        
+
                         <div class="study-card">
                             <div class="card-header">
                                 <h2>Interruption Best Practice</h2><span class="q-tag tag-java">Multithreading</span>
                             </div>
                             <div class="card-content">
-                                <p class="explanation">This example demonstrates the "Double Defense" strategy: checking for interrupts during active logic (isInterrupted) and handling blocking calls (sleep).</p>
+                                <p class="explanation">This example demonstrates the "Double Defense" strategy: checking
+                                    for interrupts during active logic (isInterrupted) and handling blocking calls
+                                    (sleep).</p>
                                 <pre><code class="language-java">public class SimpleInterruptDemo {
     public static void main(String[] args) throws InterruptedException {
         Thread worker = new Thread(() -> {
@@ -744,7 +873,8 @@ numList.forEach(num -> {
                         <li><a href="javascript:void(0)" class="dp-nav"
                                 onclick="switchTopic('dp', 'decorator', this)">Decorator Pattern</a></li>
                         <li><a href="javascript:void(0)" class="dp-nav"
-                                onclick="switchTopic('dp', 'factory', this)">Factory Pattern</a></li>
+                                onclick="switchTopic('dp', 'factory', this)">Factory
+                                Pattern</a></li>
                     </ul>
                 </aside>
                 <main class="main-content">
@@ -837,6 +967,105 @@ public class Demo {
                 </main>
             </div>
         </div>
+
+        <div id="interview-qs" class="content-section">
+            <div class="portal-layout">
+                <aside class="sidebar">
+                    <h4>Focus Areas</h4>
+                    <ul>
+                        <li><a href="javascript:void(0)" class="int-nav active"
+                                onclick="switchTopic('int', 'int-java', this)">Core Java</a></li>
+                        <li><a href="javascript:void(0)" class="int-nav"
+                                onclick="switchTopic('int', 'int-spring', this)">Spring Boot</a></li>
+                        <li><a href="javascript:void(0)" class="int-nav"
+                                onclick="switchTopic('int', 'int-dp', this)">Design Patterns</a></li>
+                    </ul>
+                </aside>
+                <main class="main-content">
+                    <div id="int-java" class="topic-pane int-pane active">
+                        <h2 style="color: #6f42c1; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">
+                            Module: Core Java Interview Questions</h2>
+
+
+                        <table class="q-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Question</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Why do we need serialization and importance of serialVersionUID?</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>How to make a class thread safe?</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>What is Thread contention?</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="int-spring" class="topic-pane int-pane">
+                        <h2 style="color: #6f42c1; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">
+                            Module: Spring Boot Interview Questions</h2>
+
+
+                        <table class="q-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Question</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>How do you configure multiple databases from different servers in Spring Boot?
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Beyond syntax, what are the key functional differences between
+                                        application.properties and application.yml?</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>How do you detect and analyze memory leaks in a production Spring Boot
+                                        application?</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="int-dp" class="topic-pane int-pane">
+                        <h2 style="color: #6f42c1; border-bottom: 2px solid #6f42c1; padding-bottom: 10px;">
+                            Module: Design Pattern Interview Questions</h2>
+
+
+                        <table class="q-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Question</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>When should you use the Singleton Pattern?</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -853,7 +1082,7 @@ public class Demo {
             const container = element.parentElement.parentElement;
             container.querySelectorAll('.sub-tab-link').forEach(link => link.classList.remove('active'));
             container.querySelectorAll('.sub-pane').forEach(pane => pane.classList.remove('active'));
-            
+
             element.classList.add('active');
             document.getElementById(paneId).classList.add('active');
             hljs.highlightAll();
@@ -862,7 +1091,7 @@ public class Demo {
         function handleRouting() {
             const hash = window.location.hash;
             const hero = document.getElementById('hero-area');
-            const sections = ['#dsa', '#corejava', '#designpatterns'];
+            const sections = ['#dsa', '#corejava', '#designpatterns', '#interview-qs'];
             hero.style.display = sections.includes(hash) ? 'none' : 'block';
             sections.forEach(s => {
                 const sectionEl = document.querySelector(s);
@@ -872,9 +1101,9 @@ public class Demo {
 
         window.addEventListener('hashchange', handleRouting);
         window.addEventListener('load', handleRouting);
+
+
     </script>
 </body>
 
 </html>
-
-
