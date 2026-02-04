@@ -581,6 +581,8 @@ private Node searchKeyIterative(Node root, int key) {
                         <li><a href="javascript:void(0)" class="java-nav"
                                 onclick="switchTopic('java', 'volatile', this)">Volatile & Threads</a></li>
                         <li><a href="javascript:void(0)" class="java-nav"
+                                onclick="switchTopic('java', 'executor', this)">Executor Service</a></li>
+                        <li><a href="javascript:void(0)" class="java-nav"
                                 onclick="switchTopic('java', 'collections', this)">Collections</a></li>
                     </ul>
                 </aside>
@@ -855,6 +857,46 @@ numList.forEach(num -> {
                         </div>
                     </div>
 
+                    <div id="executor" class="topic-pane java-pane">
+                        <h2
+                            style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
+                            Module: Executor Service</h2>
+
+                        <div class="study-card">
+                            <div class="card-header">
+                                <h2>Multi-Future Execution</h2><span class="q-tag tag-java">Concurrency</span>
+                            </div>
+                            <div class="card-content">
+                                <pre><code class="language-java">public class MultiFutureExample {
+    public static void main(String[] args) throws Exception {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        List&lt;Future&lt;Integer&gt;&gt; receipts = new ArrayList&lt;&gt;();
+
+        for (int i = 0; i < 5; i++) {
+            // Capture mutable loop variable 'i' as effectively final for lambda
+            int airlineId = i; 
+
+            Callable&lt;Integer&gt; task = () -> {
+                System.out.println("fetching receipt for the airline id:" + airlineId);
+                Thread.sleep(1000);
+                return airlineId * 1000;
+            };
+
+            receipts.add(executor.submit(task));
+        }
+
+        for (Future&lt;Integer&gt; receipt : receipts) {
+            Integer price = receipt.get();
+            System.out.println("Received Price: $" + price);
+        }
+
+        executor.shutdown();
+    }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="collections" class="topic-pane java-pane">
                         <h2>Collections Framework</h2>
                         <p>Practice coming soon...</p>
@@ -1038,6 +1080,10 @@ public class Demo {
                                     <td>3</td>
                                     <td>How do you detect and analyze memory leaks in a production Spring Boot
                                         application?</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>How do we implement Mutual TLS (mTLS)?</td>
                                 </tr>
                             </tbody>
                         </table>
